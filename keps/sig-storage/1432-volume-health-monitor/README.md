@@ -1346,6 +1346,21 @@ every CO consumer to handle them as permanently-supported values,
 which is a lot of weight to pay for signals that don't drive CO
 behavior.
 
+### Why not embed health inv pvc.Status.Condition and pod.Status.Condition
+
+One of the major reasons for not embedding the health in that field is
+because we actually wanted `VolumeHealthStatusType` to be extensible and 
+possibly add support for adding new enum values in future. 
+
+Generally speaking we did not document `PersistentVolumeClaimConditionType` to be
+extensible this way. This may however not be a huge deal.
+
+Another reason is - we designed `VolumeHealthCondition` to be basically replaced
+with newer health status if what we stored in API is different from what driver is 
+reporting now. We explicitly chose not to store `LastProbeTime`, to avoid flooding
+api-server with updates if a single backend is temporarily having problems and every
+PVC needs to be continually be updated. 
+
 ## Future enhancement 
 
 This section describes future enhancements we are planning to volume health reporting
